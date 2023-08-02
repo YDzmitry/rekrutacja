@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>16</java.version>
+		<jsoup.version>1.16.1</jsoup.version>
 		<maven.compiler.source>16</maven.compiler.source>
 		<maven.compiler.target>16</maven.compiler.target>
 	</properties>
