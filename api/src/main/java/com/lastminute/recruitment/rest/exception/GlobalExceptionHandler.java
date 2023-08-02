@@ -1,5 +1,6 @@
 package com.lastminute.recruitment.rest.exception;
 
+import com.lastminute.recruitment.domain.error.WikiPageNotFound;
 import com.lastminute.recruitment.rest.exception.constraint.validation.ConstraintViolationProblemDetail;
 import com.lastminute.recruitment.rest.exception.constraint.validation.ConstraintViolationProblemDetailParamInfo;
 import com.lastminute.recruitment.rest.exception.constraint.validation.ConstraintViolationProblemDetailParamConverter;
@@ -22,10 +23,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ProblemDetail handleCustomException(ConstraintViolationException ex) {
+    public ProblemDetail handleConstraintViolationException(ConstraintViolationException ex) {
         List<ConstraintViolationProblemDetailParamInfo> params = constraintViolationProblemDetailParamConverter.convert(ex);
 
         return new ConstraintViolationProblemDetail(HttpStatus.BAD_REQUEST.value(), params);
+    }
+
+    @ExceptionHandler(WikiPageNotFound.class)
+    public ProblemDetail handleWikiPageNotFoundException(WikiPageNotFound ex) {
+        return ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
     }
 
 }

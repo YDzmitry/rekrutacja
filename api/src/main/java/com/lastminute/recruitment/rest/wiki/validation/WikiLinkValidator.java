@@ -11,6 +11,6 @@ public class WikiLinkValidator implements ConstraintValidator<WikiLink, String> 
 
     @Override
     public boolean isValid(String link, ConstraintValidatorContext constraintValidatorContext) {
-        return Optional.ofNullable(link).map(x -> x.matches(WIKI_LINK_PATTERN)).orElse(false);
+        return Optional.ofNullable(link).map(value -> value.matches(WIKI_LINK_PATTERN)).orElse(false);
     }
 }
