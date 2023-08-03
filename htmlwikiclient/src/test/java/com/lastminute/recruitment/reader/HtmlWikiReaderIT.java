@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.lastminute.recruitment.config.HtmlWikiConfiguration;
 import com.lastminute.recruitment.domain.WikiPage;
+import com.lastminute.recruitment.domain.WikiReader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.CollectionUtils;
@@ -16,11 +17,11 @@ import org.springframework.util.CollectionUtils;
     HtmlWikiConfiguration.class,
 })
 @ExtendWith(SpringExtension.class)
-@Profile("html")
-class HtmlWikiReaderIT {
+@ActiveProfiles(profiles = "html")
+public class HtmlWikiReaderIT {
 
     @Autowired
-    private HtmlWikiReader htmlWikiReader;
+    private WikiReader htmlWikiReader;
 
     @Test
     void read() {
@@ -118,5 +119,19 @@ class HtmlWikiReaderIT {
 
         String secondLink = wikiPage.getLinks().get(1);
         assertEquals("http://wikiscrapper.test/site1234", secondLink);
+    }
+
+    @Test
+    void readInvalidHtml() {
+        // Given
+        String link = "\"http://wikiscrapper.test/site-invalid-html\"";
+        // When
+        WikiPage wikiPage = htmlWikiReader.read(link);
+        // Then
+        assertNotNull(wikiPage);
+        assertNull(wikiPage.getContent());
+        assertNull(wikiPage.getTitle());
+        assertNull(wikiPage.getSelfLink());
+        assertTrue(CollectionUtils.isEmpty(wikiPage.getLinks()));
     }
 }
